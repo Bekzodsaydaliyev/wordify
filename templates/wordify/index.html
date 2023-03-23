@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="wrap">
+    <section class="site-section pt-5 pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="owl-carousel owl-theme home-slider">
+                        {% for object in object_list %}
+                        <div>
+                            <a href="{% url 'blog:detail' object.id %}"
+                               class="a-block d-flex align-items-center height-lg"
+                               style="background-image: url('{{ object.image.url }}'); ">
+                                <div class="text half-to-full">
+                                    <span class="category mb-5">{{ object.category }}</span>
+                                    <div class="post-meta">
+                                        <span class="author mr-2"><img src="{{ author.avatar.url }}"
+                                                                       alt="Colorlib"> {{ author.user.get_full_name }}</span>&bullet;
+                                        <span class="mr-2">{{ object.created_date }} </span> &bullet;
+                                        <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                                    </div>
+                                    <h3>{{ object.title }}</h3>
+                                    <p>{{ object.description }}</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="site-section py-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="mb-4">Latest Posts</h2>
+                </div>
+            </div>
+            <div class="row blog-entries">
+                <div class="col-md-12 col-lg-8 main-content">
+                    <div class="row">
+                        {% for object in object_list %}
+
+                        <div class="col-md-6">
+                            <a href="{% url 'blog:detail' object.id %}" class="blog-entry element-animate"
+                               data-animate-effect="fadeIn">
+                                <img src="{{ object.image.url }}" alt="Image placeholder">
+                                <div class="blog-content-body">
+                                    <div class="post-meta">
+                                        <span class="author mr-2"><img src="{% static 'images/person_1.jpg' %}"
+                                                                       alt="Colorlib"> {{ author.name }}</span>&bullet;
+                                        <span class="mr-2">{{ object.created_date }}</span> &bullet;
+                                        <span class="ml-2"><span class="fa fa-comments"></span>{{ object.comment_set.count }}</span>
+                                    </div>
+                                    <h2>{{ object.title }}</h2>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                    {% include 'wordify/paginator.html' %}
+                </div>
+
+                <div class="col-md-12 col-lg-4 sidebar">
+                    <div class="sidebar-box search-form-wrap">
+                        <form action="{% url 'blog:list' %}" class="search-form">
+                            <div class="form-group">
+                                <span class="icon fa fa-search"></span>
+                                <input type="search" name="search" class="form-control" id="s"
+                                       placeholder="Type a keyword and hit enter">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="sidebar-box">
+                        <div class="bio text-center">
+                            <img src="{% static 'images/person_1.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                            <div class="bio-body">
+                                <h2>{{ author }}</h2>
+                                <p>{{ author.bio }}</p>
+                                <p class="social">
+                                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-instagram"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Popular Posts</h3>
+                        <div class="post-entry-sidebar">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <img src="{% static 'images/img_2.jpg' %}" alt="Image placeholder" class="mr-4">
+                                        <div class="text">
+                                            <h4>How to Find the Video Games of Your Youth</h4>
+                                            <div class="post-meta">
+                                                <span class="mr-2">March 15, 2018 </span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="sidebar-box">
+                        <h3 class="heading">Category</h3>
+                        <ul class="categories">
+                            {% for category in categories %}
+                            <li><a href="{% url 'blog:list' %}?cat={{ category }}">{{ category }} <span>{{category.article_set.count}}</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="sidebar-box">
+                        <h3 class="heading">Tags</h3>
+                        <ul class="tags">
+                            {% for tag in tags %}
+                            <li><a href="{% url 'blog:list' %}?tag={{ tag.title }}">{{ tag }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

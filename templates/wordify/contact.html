@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="wrap">
+    <section class="site-sectionpt-5 pb-5">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h1>Contact Me</h1>
+                </div>
+            </div>
+            <div class="row blog-entries">
+                <div class="col-md-12 col-lg-8 main-content">
+                    <form action="#" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label for="name">Name</label>
+                                {{ form.name }}
+                            </div>
+
+                            <div class="col-md-12 form-group">
+                                <label for="email">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label for="subject">Subject</label>
+                                {{ form.subject }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label for="message">Write Message</label>
+                                {{ form.message }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <input type="submit" value="Send Message" class="btn btn-primary">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-12 col-lg-4 sidebar">
+                    <div class="sidebar-box search-form-wrap">
+                        <form action="{% url 'blog:list' %}" class="search-form">
+                            <div class="form-group">
+                                <span class="icon fa fa-search"></span>
+                                <input type="search" name="search" class="form-control" id="s"
+                                       placeholder="Type a keyword and hit enter">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <div class="bio text-center">
+                            <img src="{{ author.avatar.url }}" alt="Image Placeholder" class="img-fluid">
+                            <div class="bio-body">
+                                <h2>{{ author.user.get_full_name }}</h2>
+                                <p>{{ author.bio }}</p>
+                                <p class="social">
+                                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-instagram"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Popular Posts</h3>
+                        <div class="post-entry-sidebar">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <img src="{{ last_article.image.url }}" alt="Image placeholder" class="mr-4">
+                                        <div class="text">
+                                            <h4>{{ last_article.title }}</h4>
+                                            <div class="post-meta">
+                                                <span class="mr-2">{{ last_article.created_date }}</span> &bullet;
+                                                <span class="ml-2"><span class="fa fa-comments"></span>{{ last_article.comment_set.count }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Categories</h3>
+                        <ul class="categories">
+                            {% for category in categories %}
+                            <li><a href="{% url 'blog:list' %}?=cat={{ tag.title }}">{{ category }}<span>(12)</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Tags</h3>
+                        <ul class="tags">
+                            {% for tag in tags %}
+                            <li><a href="{% url 'blog:list' %}?tag={{ tag.title }}">{{ tag }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

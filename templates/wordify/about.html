@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="wrap">
+    <section class="site-section pt-5">
+        <div class="container">
+            <div class="row blog-entries">
+                <div class="col-md-12 col-lg-8 main-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="mb-4">Hi There! I'm {{ author.user.get_full_name}}</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum minima eveniet recusandae
+                                suscipit eum laboriosam fugit amet deleniti iste et. Ad dolores, necessitatibus non
+                                saepe tenetur impedit commodi quibusdam natus repellat, exercitationem accusantium
+                                perferendis officiis. Laboriosam impedit quia minus pariatur!</p>
+                            <p>Dignissimos iste consectetur, nemo magnam nulla suscipit eius quibusdam, quo aperiam quia
+                                quae est explicabo nostrum ab aliquid vitae obcaecati tenetur beatae animi fugiat
+                                officia id ipsam sint? Obcaecati ea nisi fugit assumenda error totam molestiae saepe
+                                fugiat officiis quam?</p>
+                            <p>Culpa porro quod doloribus dolore sint. Distinctio facilis ullam voluptas nemo voluptatum
+                                saepe repudiandae adipisci officiis, explicabo eaque itaque sed necessitatibus, fuga, ea
+                                eius et aliquam dignissimos repellendus impedit pariatur voluptates. Dicta perferendis
+                                assumenda, nihil placeat, illum quibusdam. Vel, incidunt?</p>
+                            <p>Dolorum blanditiis illum quo quaerat, possimus praesentium perferendis! Quod autem optio
+                                nobis, placeat officiis dolorem praesentium odit. Vel, cum, a. Adipisci eligendi eaque
+                                laudantium dicta tenetur quod, pariatur sunt sed natus officia fuga accusamus
+                                reprehenderit ratione, provident possimus ut voluptatum.</p>
+                        </div>
+                    </div>
+                    <div class="row mb-5 mt-5">
+                        <div class="col-md-12 mb-5">
+                            <h2>My Latest Posts</h2>
+                        </div>
+                        <div class="col-md-12">
+                            {% for article in object_list %}
+                            <div class="post-entry-horzontal">
+                                <a href="{% url 'blog:detail' article.id %}">
+                                    <div class="image" style="background-image: url({{ article.image.url }});"></div>
+                                    <span class="text">
+<div class="post-meta">
+<span class="author mr-2"><img src=" {% if author.avatar.url %} {{ author.avatar.url }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}" alt="Colorlib"> {{ author.user.get_full_name }}</span>&bullet;
+<span class="mr-2">{{ article.created_date }}</span> &bullet;
+<span class="ml-2"><span class="fa fa-comments"></span>{{ article.comment_set.count }}</span>
+</div>
+<h2>{{ article.title }}</h2>
+</span>
+                                </a>
+                            </div>
+{% endfor %}
+                        </div>
+                    </div>
+                    {% include 'wordify/paginator.html' %}
+                </div>
+
+                <div class="col-md-12 col-lg-4 sidebar">
+                    <div class="sidebar-box search-form-wrap">
+                        <form action="{% url 'blog:list' %}" class="search-form">
+                            <div class="form-group">
+                                <span class="icon fa fa-search"></span>
+                                <input type="search" name="search" class="form-control" id="s"
+                                       placeholder="Type a keyword and hit enter">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <div class="bio text-center">
+                            <img src="{{ author.avatar.url }}" alt="Image Placeholder" class="img-fluid">
+                            <div class="bio-body">
+                                <h2>{{ author.user.get_full_name }}</h2>
+                                <p>{{ author.bio }}</p>
+                                <p class="social">
+                                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-instagram"></span></a>
+                                    <a href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Popular Posts</h3>
+                        <div class="post-entry-sidebar">
+                            <ul>
+                                {% for article in last_article %}
+                                <li>
+                                    <a href="#">
+                                        <img src="{{ article.image.url }}" alt="Image placeholder" class="mr-4">
+                                        <div class="text">
+                                            <h4>{{ article.title }}</h4>
+                                            <div class="post-meta">
+                                                <span class="mr-2">{{ article.created_date }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Categories</h3>
+                        <ul class="categories">
+                            {% for category in categories %}
+                            <li><a href="{% url 'blog:list' %}?cat={{ category.title }}">{{ category.title }} <span>(12)</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Tags</h3>
+                        <ul class="tags">
+                            {% for tag in tags %}
+                            <li><a href="{% url 'blog:list' %}?tag={{ tag.title }}">{{ tag }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

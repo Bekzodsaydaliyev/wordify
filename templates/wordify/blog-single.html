@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="site-section py-lg">
+    <div class="container">
+        <div class="row blog-entries element-animate">
+            <div class="col-md-12 col-lg-8 main-content">
+                <img src="{{ articles.image.url }}" alt="Image" class="img-fluid mb-5">
+                <div class="post-meta">
+
+                    {% if author.avatar.url %}
+                        <span class="author mr-2"><img src="{{ author.avatar.url }}" style="width: 70px" alt="Colorlib"
+                                                       class="mr-2"> {{ author.user.get_full_name }}</span>
+                    {% else %}
+                    <span class="author mr-2"><img src="{% static 'images/avatar.jpg' %}" style="width: 70px" alt="Colorlib"
+                                                       class="mr-2"> {{ author.user.get_full_name }}</span>
+                    {% endif %}
+                    &bullet;
+                    <span class="mr-2">{{ articles.created_date }}</span> &bullet;
+                    <span class="ml-2"><span class="fa fa-comments"></span>{{ articles.comment_set.count }}</span>
+                </div>
+                <h1 class="mb-4">{{ articles.title }}</h1>
+                {% for tag in tags %}
+                <a class="category mb-5" href="#">{{ tag }}</a>
+                {% endfor %}
+                <div class="post-content-body">{{ articles.description }}
+                    <div class="row mb-5">
+                        {% for image in articles.subcontent.subimage.all %}
+                        <div class="{% if image.is_wide %} col-md-12 mb-4 {% else %} col-md-6 mb-4{% endif %}">
+                            <img src="{{ image.image.url }}" alt="Image placeholder" class="img-fluid">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {{ articles.subcontent.description }}
+                </div>
+                <div class="pt-5">
+                    <p>Category:<a href="#"> {{ articles.category }}</a>; Tags: {% for tag in articles.tags.all %}<a href="#">{{ tag }}</a> {% endfor %}
+                </div>
+                <div class="pt-5">
+                    <h3 class="mb-5">{{ articles.comment_set.count }} Comments</h3>
+                    <ul class="comment-list">
+                        {% for comment in articles.comment_set.all %}
+                        <li class="comment">
+
+                            <div class="vcard">
+                                {% if comment.author.avatar.url %}
+                                    <img src="{{ comment.author.avatar.url }}" style="width: 70px" alt="Image placeholder">
+                                {% else %}
+                                    <img src="{% static 'images/avatar.jpg' %}" style="width: 70px" alt="Image placeholder">
+                                {% endif %}
+                            </div>
+                            <div class="comment-body">
+                                <h3>{{ comment.author.user }}</h3>
+                                <div class="meta">{{ comment.created_date }}</div>
+                                <p>{{ comment.description }}</p>
+                            </div>
+                        </li>
+                            {% endfor %}
+                    </ul>
+
+                    <div class="comment-form-wrap pt-5">
+                        <h3 class="mb-5">Leave a comment</h3>
+                        <form action="#" class="p-5 bg-light" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                {{ form.description }}
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Post Comment" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-4 sidebar">
+                <div class="sidebar-box search-form-wrap">
+                    <form action="{% url 'blog:list' %}" class="search-form">
+                        <div class="form-group">
+                            <span class="icon fa fa-search"></span>
+                            <input type="search" name="search" class="form-control" id="s"
+                                   placeholder="Type a keyword and hit enter">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="sidebar-box">
+                    <div class="bio text-center">
+                        {% if author.avatar.url %}
+                            <img src="{{ author.avatar.url }}" alt="Image Placeholder" class="img-fluid">
+                        {% else %}
+                            <img src="{% static 'images/avatar' %}" alt="Image Placeholder" class="img-fluid">
+                        {% endif %}
+                        <div class="bio-body">
+                            <h2>{{ author.user.get_full_name }}</h2>
+                            <p>{{ author.bio }}</p>
+                            <p class="social">
+                                <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                                <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                                <a href="#" class="p-2"><span class="fa fa-instagram"></span></a>
+                                <a href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-box">
+                    <h3 class="heading">Popular Posts</h3>
+                    <div class="post-entry-sidebar">
+                        <ul>
+                            <li>
+                                <a href="#">
+                                    <img src="{{ last_article.image.url }}" alt="Image placeholder" class="mr-4">
+                                    <div class="text">
+                                        <h4>{{ last_article.title }}</h4>
+                                        <div class="post-meta">
+                                            <span class="mr-2">{{ last_article.created_date }}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sidebar-box">
+                    <h3 class="heading">Categories</h3>
+                    <ul class="categories">
+                        {% for category in categories %}
+                        <li><a href="{% url 'blog:list' %}?cat={{ category.title }}">{{ category }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="sidebar-box">
+                    <h3 class="heading">Tags</h3>
+                    <ul class="tags">
+                        {% for tag in tags %}
+                        <li><a href="{% url 'blog:list' %}?tag={{ tag.title }}">{{ tag }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-3 ">Related Post</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-4">
+                <a href="#" class="a-block sm d-flex align-items-center height-md"
+                   style="background-image: url('{% static 'images/img_2.jpg' %}'); ">
+                    <div class="text">
+                        <div class="post-meta">
+                            <span class="category">Lifestyle</span>
+                            <span class="mr-2">March 15, 2018 </span> &bullet;
+                            <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                        </div>
+                        <h3>There’s a Cool New Way for Men to Wear Socks and Sandals</h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="#" class="a-block sm d-flex align-items-center height-md"
+                   style="background-image: url('{% static 'images/img_3.jpg' %}'); ">
+                    <div class="text">
+                        <div class="post-meta">
+                            <span class="category">Travel</span>
+                            <span class="mr-2">March 15, 2018 </span> &bullet;
+                            <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                        </div>
+                        <h3>There’s a Cool New Way for Men to Wear Socks and Sandals</h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="#" class="a-block sm d-flex align-items-center height-md"
+                   style="background-image: url('{% static 'images/img_4.jpg' %}'); ">
+                    <div class="text">
+                        <div class="post-meta">
+                            <span class="category">Food</span>
+                            <span class="mr-2">March 15, 2018 </span> &bullet;
+                            <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                        </div>
+                        <h3>There’s a Cool New Way for Men to Wear Socks and Sandals</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

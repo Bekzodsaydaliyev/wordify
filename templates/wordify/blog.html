@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="wrap">
+    <section class="site-section py-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="mb-4">All Posts</h2>
+                </div>
+            </div>
+            <div class="row blog-entries">
+                <div class="col-md-12 col-lg-8 main-content">
+                    <div class="row">
+                        {% for object in object_list %}
+
+                        <div class="col-md-6">
+                            <a href="{% url 'blog:detail' object.id %}" class="blog-entry element-animate"
+                               data-animate-effect="fadeIn">
+                                <img src="{{ object.image.url }}" alt="Image placeholder">
+                                <div class="blog-content-body">
+                                    <div class="post-meta">
+                                        <span class="author mr-2"><img src="{{ author.avatar.url }}"
+                                                                       alt="Colorlib"> {{ author.user.get_full_name }}</span>&bullet;
+                                        <span class="mr-2">{{ object.created_date }}</span> &bullet;
+                                        <span class="ml-2"><span class="fa fa-comments"></span> {{object.comment_set.count}}</span>
+                                    </div>
+                                    <h2>{{ object.title }}</h2>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% include 'wordify/paginator.html' %}
+                </div>
+
+                <div class="col-md-12 col-lg-4 sidebar">
+                    <div class="sidebar-box search-form-wrap">
+                        <form action="{% url 'blog:list' %}" class="search-form">
+                            <div class="form-group">
+                                <span class="icon fa fa-search"></span>
+                                <input type="search" name="search" class="form-control" id=""
+                                       placeholder="Type a keyword and hit enter">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <div class="bio text-center">
+                            {% if author.avatar.url %}
+                            <img src="{{ author.avatar.url }}" alt="Image Placeholder" class="img-fluid">
+                            <div class="bio-body">
+                                {% else %}
+                                <img src="{% static 'images/avatar.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                                <div class="bio-body">
+                                    {% endif %}
+                                    <h2>{{ author.user.get_full_name}}</h2>
+                                    <p>{{ author.bio }}</p>
+                                    <p class="social">
+                                        <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                                        <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                                        <a href="#" class="p-2"><span class="fa fa-instagram"></span></a>
+                                        <a href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-box">
+                            <h3 class="heading">Popular Posts</h3>
+                            <div class="post-entry-sidebar">
+                                <ul>
+                                    <li>
+                                        <a href="#">
+                                            <img src="{{ last_article.image.url }}" alt="Image placeholder"
+                                                 class="mr-4">
+                                            <div class="text">
+                                                <h4>{{ last_article.title }}</h4>
+                                                <div class="post-meta">
+                                                    <span class="mr-2">{{ last_article.created_date }}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="sidebar-box">
+                            <h3 class="heading">Category</h3>
+                            <ul class="categories">
+                                {% for category in categories %}
+                                <li><a href="{% url 'blog:list' %}?cat={{ category }}">{{ category }}<span>{{category.article_set.count}}</span></a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="sidebar-box">
+                            <h3 class="heading">Tags</h3>
+                            <ul class="tags">
+                                {% for tag in tags %}
+                                <li><a href="{% url 'blog:list' %}?tag={{ tag }}">{{ tag }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
